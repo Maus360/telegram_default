@@ -3,7 +3,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import RegexHandler
 from telegram.ext import Updater, CommandHandler
 import telegram
-
+from telegram_default import default_week, default_day, default_build, default_time
 import logging
 from selt import query
 
@@ -28,15 +28,22 @@ def facts_to_str(user_data):
 
 def start(bot, update):
     update.message.reply_text('Поиск свободных аудиторий в БГУИРе\nЗаполните 4 поля',reply_markup=markup)
+    update.message.reply_text('Неделя: ', reply_markup=default_week())
+    update.message.reply_text('Корпус: ', reply_markup=default_build())
+    update.message.reply_text('День: ',   reply_markup=default_day())
+    update.message.reply_text('Время: ',  reply_markup=default_time())
     return CHOOSING
 
 def week_choice(bot,update,user_data):
+    user_data['choice']=str(default_week)
     user_data['choice']=update.message.text
     ch_markup=telegram.ReplyKeyboardMarkup([['1','2','3','4']])
     update.message.reply_text('Неделя: ',reply_markup=ch_markup)
     return REPLY
 
+
 def day_choice(bot,update,user_data):
+    user_data['choice'] = str(default_day)
     user_data['choice']=update.message.text
     ch_markup=telegram.ReplyKeyboardMarkup([['1','2','3'],
                                     ['4','5','6'],])
@@ -44,13 +51,15 @@ def day_choice(bot,update,user_data):
     return REPLY
 
 def corp_choice(bot,update,user_data):
-    user_data['choice']=update.message.text
-    ch_markup=telegram.ReplyKeyboardMarkup([['1','2','3'],
-                                    ['4','5','7'],])
-    update.message.reply_text('Выберите корпус: ',reply_markup=ch_markup)
+    user_data['choice']=str(default_build)
+    user_data['choice'] = update.message.text
+    ch_markup = telegram.ReplyKeyboardMarkup([['1', '2', '3'],
+                                              ['4', '5', '7'], ])
+    update.message.reply_text('Выберите корпус: ', reply_markup=ch_markup)
     return REPLY
 
 def time_choice(bot,update,user_data):
+    user_data['choice'] = str(default_time)
     user_data['choice']=update.message.text
     ch_markup=telegram.ReplyKeyboardMarkup([['08:00-09:35','09:45-11:20',"11:40-13:15"],
                                     ['13:25-15:00','15:20-16:55','17:05-18:40'],])
